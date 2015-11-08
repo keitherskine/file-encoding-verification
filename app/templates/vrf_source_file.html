@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <style>
+      body {background-color:lightgrey}
+      h1 {color:blue}
+      p {color:green}
+      table, tr, td {border:1px solid black}
+    </style>
+    <title>{{ state }} - {{ runcode }}</title>
+  </head>
+  <body>
+    {% if files %}
+    <h1>These are the voter files available for {{ state }} {{ runcode }}:</h1>
+    <form method="POST">
+      <select name="filename">
+        {% for file in files %}
+        <option value="{{ file }}"{% if filename == file %} selected{% endif %}>{{ file }}</option>
+        {% endfor %}
+      </select>
+      <select name="encoding">
+        <option value="utf-8"{% if encoding == "utf-8" %} selected{% endif %}>UTF-8</option>
+        <option value="iso-8859-1"{% if encoding == "iso-8859-1" %} selected{% endif %}>ISO-8859-1</option>
+        <option value="cp1252"{% if encoding == "cp1252" %} selected{% endif %}>Windows-1252</option>
+      </select>
+      <select name="delimiter">
+        <option value=","{% if delimiter == "," %} selected{% endif %}>"," (comma)</option>
+        <option value="&#9;"{% if delimiter == "\t" %} selected{% endif %}>"\t" (tab)</option>
+        <option value="|"{% if delimiter == "|" %} selected{% endif %}>"|" (pipe)</option>
+      </select>
+      <button type="submit" name="submit" value="view_file">View the file</button>
+    </form>
+    {% else %}
+    <h1>No voter files are available for {{ state }} {{ runcode }}</h1>
+    {% endif %}
+    {% if data is defined %}
+      {% if data %}
+      <table>
+        {% for row in data %}
+        <tr>
+          {% for field in row %}
+          <td>{{ field }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      This file is empty
+      {% endif %}
+    {% endif %}
+  </body>
+</html>
